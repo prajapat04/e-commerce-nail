@@ -1,11 +1,15 @@
 export const products = [
-  {
+    {
     id: 1,
-    name: "Glam Transparent Stamp",
-    price: 450,
-    image: "/images/face.png",
-    description: "High-quality stamp for perfect nail art.",
-    category: "Tools"
+    name: "Glossy Pink Nails",
+    price: 499,
+    image: "/images/pink1.png", // main image
+    images: [                  // 👇 Add this array
+      "/images/pink1.png",
+      "/images/pink2.png",
+      "/images/pink3.png"
+    ],
+    description: "Beautiful glossy pink nail set for all occasions."
   },
   {
     id: 2,

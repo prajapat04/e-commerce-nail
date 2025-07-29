@@ -1,8 +1,13 @@
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+    const handleHomeClick = () => {
+    if (location.pathname === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
   return (
-    <footer className="bg-gray-100 text-gray-700 mt-10">
+    <footer id="contact" className="bg-gray-100 text-gray-700 mt-10">
       <div className="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-3 gap-8">
         {/* Column 1 */}
         <div>
@@ -14,10 +19,10 @@ const Footer = () => {
         <div>
           <h4 className="text-lg font-semibold mb-2">Quick Links</h4>
           <ul className="space-y-1 text-sm">
-            <li><Link to="/" className="hover:text-pink-600">Home</Link></li>
+            <li><Link to="/"  onClick={handleHomeClick} className="hover:text-pink-600">Home</Link></li>
             <li><Link to="/shop" className="hover:text-pink-600">Shop</Link></li>
             <li><Link to="/about" className="hover:text-pink-600">About</Link></li>
-            <li><Link to="/contact" className="hover:text-pink-600">Contact</Link></li>
+            <li><a href="#contact" className="hover:text-pink-600">Contact</a></li>
           </ul>
         </div>
 

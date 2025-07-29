@@ -5,14 +5,15 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const Cart = () => {
-  const { cartItems, removeFromCart, clearCart } = useCart();
-  const { user } = useAuth();
+  const { cartItems, removeFromCart, increaseQuantity,
+    decreaseQuantity, clearCart } = useCart();
+  const { user, setShowAuth } = useAuth();
   const navigate = useNavigate();
    
   const handleCheckout = () => {
     if (!user) {
       toast.error("Please login to proceed");
-      navigate("/login", { state: { from: "/checkout" } }); // ✅ Save intent
+     setShowAuth(true);
       return;
     }
 
@@ -41,8 +42,22 @@ const Cart = () => {
               <h4 className="font-semibold">{item.name}</h4>
               <p>Qty: {item.quantity}</p>
               <p>Price: ₹{item.price}</p>
+               <button
+              onClick={() => decreaseQuantity(item.id)}
+              className="px-2 py-0.5 border rounded"
+            >
+              -
+            </button>
+            <span className="mx-2">{item.quantity}</span>
+            <button
+              onClick={() => increaseQuantity(item.id)}
+              className="px-2 py-0.5 border rounded"
+            >
+              +
+            </button>
             </div>
           </div>
+          
           <button
             onClick={() => removeFromCart(item.id)}
             className="text-red-500 hover:underline"
@@ -55,7 +70,7 @@ const Cart = () => {
         <p className="text-xl font-bold">Total: ₹{total}</p>
         <button
           onClick={clearCart}
-          className="mt-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          className="mt-2 bg-red-500 text-white px-4 py-2 mx-1 rounded hover:bg-red-600"
         >
           Clear Cart
         </button>

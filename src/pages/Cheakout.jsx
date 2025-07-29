@@ -1,28 +1,47 @@
 import { useCart } from "../context/CartContext";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const Checkout = () => {
   const { cartItems, clearCart, updateOrderSummary } = useCart();
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
+
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    pinCode: "",
+    city: "",
+    state: "",
+    paymentMethod: "cod",
+  });
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const handleOrder = () => {
-    if (!name || !address) {
-      toast.error("Please fill in your name and address.");
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = () => {
+    const requiredFields = ["firstName", "lastName", "email", "phone", "pinCode", "city", "state"];
+    const isEmpty = requiredFields.some((field) => form[field].trim() === "");
+    if (isEmpty) {
+      toast.error("Please fill all required fields.");
       return;
     }
 
-      updateOrderSummary({
-    name,
-    address,
-    items: cartItems,
-    total: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
-  });
+    // Save order summary for success page
+    updateOrderSummary({
+      name: `${form.firstName} ${form.lastName}`,
+      address: `${form.city}, ${form.state} - ${form.pinCode}`,
+      email: form.email,
+      phone: form.phone,
+      paymentMethod: form.paymentMethod,
+      items: cartItems,
+      total,
+    });
 
     toast.success("🎉 Order placed successfully!");
     clearCart();
@@ -35,45 +54,96 @@ const Checkout = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Checkout</h2>
+      <h2 className="text-2xl font-bold mb-6">Checkout</h2>
 
-      <div className="mb-6">
-        <label className="block mb-2 font-semibold">Full Name</label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <input
-          className="w-full border px-4 py-2 rounded"
           type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="John Doe"
+          name="firstName"
+          value={form.firstName}
+          onChange={handleChange}
+          placeholder="First Name"
+          className="border px-4 py-2 rounded w-full"
         />
+        <input
+          type="text"
+          name="lastName"
+          value={form.lastName}
+          onChange={handleChange}
+          placeholder="Last Name"
+          className="border px-4 py-2 rounded w-full"
+        />
+        <input
+          type="email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          placeholder="Email"
+          className="border px-4 py-2 rounded w-full"
+        />
+        <input
+          type="tel"
+          name="phone"
+          value={form.phone}
+          onChange={handleChange}
+          placeholder="Phone Number"
+          className="border px-4 py-2 rounded w-full"
+        />
+        <input
+          type="text"
+          name="pinCode"
+          value={form.pinCode}
+          onChange={handleChange}
+          placeholder="PIN Code"
+          className="border px-4 py-2 rounded w-full"
+        />
+        <input
+          type="text"
+          name="city"
+          value={form.city}
+          onChange={handleChange}
+          placeholder="City"
+          className="border px-4 py-2 rounded w-full"
+        />
+        <input
+          type="text"
+          name="state"
+          value={form.state}
+          onChange={handleChange}
+          placeholder="State"
+          className="border px-4 py-2 rounded w-full"
+        />
+        <div className="col-span-1 sm:col-span-2">
+          <label className="block font-semibold mb-1">Payment Method</label>
+          <select
+            name="paymentMethod"
+            value={form.paymentMethod}
+            onChange={handleChange}
+            className="border px-4 py-2 rounded w-full"
+          >
+            <option value="cod">Cash on Delivery</option>
+          </select>
+        </div>
       </div>
 
-      <div className="mb-6">
-        <label className="block mb-2 font-semibold">Shipping Address</label>
-        <textarea
-          className="w-full border px-4 py-2 rounded"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          placeholder="123, Main Street, City, ZIP"
-        />
-      </div>
-
-      <div className="border-t pt-4">
+      <div className="border-t pt-4 mt-6">
         <h3 className="text-lg font-bold mb-2">Order Summary</h3>
         {cartItems.map((item) => (
-          <div key={item.id} className="flex justify-between py-1">
-            <span>{item.name} × {item.quantity}</span>
+          <div key={item.id} className="flex justify-between py-1 text-sm">
+            <span>
+              {item.name} × {item.quantity}
+            </span>
             <span>₹{item.price * item.quantity}</span>
           </div>
         ))}
-        <div className="flex justify-between font-bold border-t pt-2 mt-2">
+        <div className="flex justify-between font-bold border-t pt-2 mt-2 text-lg">
           <span>Total:</span>
           <span>₹{total}</span>
         </div>
       </div>
 
       <button
-        onClick={handleOrder}
+        onClick={handleSubmit}
         className="mt-6 w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700"
       >
         Place Order
