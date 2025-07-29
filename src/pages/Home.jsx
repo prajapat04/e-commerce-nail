@@ -13,7 +13,7 @@ const Home = () => {
   const { orderSummary } = useCart();
 
   return (
-    <section className="p-4 sm:p-6 max-w-7xl mx-auto">
+    <section className="p-4 sm:p-6 max-w-full mx-auto">
       {/* 🔄 Banner Slider */}
       <BannerSlider />
 
