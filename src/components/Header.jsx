@@ -4,15 +4,16 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Menu, X, ShoppingCart, Search } from 'lucide-react';
 import AuthModal from '../context/AuthModel';
+import { FaWhatsapp } from 'react-icons/fa';
 
 const Header = () => {
   const { cartItems } = useCart();
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const whatsappURL = "https://wa.me/918290726836?text=Hi%20NailShop%2C%20I%20have%20a%20query!";
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
@@ -43,7 +44,7 @@ const Header = () => {
         </Link>
 
         {/* Desktop Search */}
-        <form onSubmit={handleSearch} className="hidden md:flex max-w-md mx-auto">
+        <form onSubmit={handleSearch} className="hidden md:flex max-w-md mx-auto w-full">
           <div className="relative w-full">
             <Search size={18} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
@@ -59,10 +60,10 @@ const Header = () => {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex justify-center gap-8 text-sm sm:text-base">
-          <Link to="/" className="hover:text-pink-600">Home</Link>
-          <Link to="/shop" className="hover:text-pink-600">Shop</Link>
-          <a href="#about" className="hover:text-pink-600">About</a>
-          <a href="#contact" className="hover:text-pink-600">Contact</a>
+          <Link to="/" className="hover:text-pink-600 m-auto">Home</Link>
+          <Link to="/shop" className="hover:text-pink-600 m-auto">Shop</Link>
+          <a href="#about" className="hover:text-pink-600 m-auto">About</a>
+          <a href="#contact" className="hover:text-pink-600 m-auto">Contact</a>
           {user ? (
             <>
               <span className="text-sm">Hi, {user.name}</span>
@@ -148,6 +149,15 @@ const Header = () => {
           )}
         </div>
       </div>
+ <a
+  href={whatsappURL}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="fixed bottom-5 right-5 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg z-50"
+  aria-label="Chat on WhatsApp"
+>
+  <FaWhatsapp size={24} />
+</a>
 
     
 
