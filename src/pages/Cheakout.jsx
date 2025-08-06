@@ -2,6 +2,7 @@ import { useCart } from "../context/CartContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { sendOrderEmail } from "../utils/SendEmail";
 
 const Checkout = () => {
   const { cartItems, clearCart, updateOrderSummary } = useCart();
@@ -24,7 +25,7 @@ const Checkout = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const requiredFields = ["firstName", "lastName", "email", "phone", "pinCode", "city", "state"];
     const isEmpty = requiredFields.some((field) => form[field].trim() === "");
     if (isEmpty) {
@@ -42,6 +43,19 @@ const Checkout = () => {
       items: cartItems,
       total,
     });
+    
+const orderData = {
+  name: `${form.firstName} ${form.lastName}`,
+  email: form.email,
+  phone: form.phone,
+  address: `${form.city}, ${form.state} - ${form.pinCode}`,
+  cartItems, // ✅ FIXED
+  total
+};
+  console.log("Sending this order:", orderData);
+
+  const success = await sendOrderEmail(orderData);
+
 
     toast.success("🎉 Order placed successfully!");
     clearCart();
